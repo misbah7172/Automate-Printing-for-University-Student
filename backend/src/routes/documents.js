@@ -24,10 +24,28 @@ const upload = multer({
   }
 });
 
-// POST /api/documents/upload
+// POST /api/documents/upload (multipart upload with file type validation)
 router.post('/upload', upload.single('document'), asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Additional file type validation
+  const allowedMimeTypes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain',
+    'image/jpeg',
+    'image/png',
+    'image/jpg'
+  ];
+
+  if (!allowedMimeTypes.includes(req.file.mimetype)) {
+    return res.status(400).json({ 
+      error: 'Invalid file type',
+      allowedTypes: ['PDF', 'DOC', 'DOCX', 'TXT', 'JPG', 'PNG']
+    });
   }
 
   try {
@@ -51,7 +69,14 @@ router.post('/upload', upload.single('document'), asyncHandler(async (req, res) 
 
     res.status(201).json({
       message: 'Document uploaded successfully',
-      document
+      document: {
+        id: document.id,
+        originalName: document.originalName,
+        fileSize: document.fileSize,
+        mimeType: document.mimeType,
+        status: document.status,
+        createdAt: document.createdAt
+      }
     });
   } catch (error) {
     console.error('Upload error:', error);

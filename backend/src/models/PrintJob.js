@@ -35,15 +35,24 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.ENUM(
-        'pending',
-        'paid',
+        'awaiting_payment',
         'queued',
+        'waiting_for_confirm',
         'printing',
         'completed',
         'failed',
         'cancelled'
       ),
-      defaultValue: 'pending'
+      defaultValue: 'awaiting_payment'
+    },
+    upid: {
+      type: DataTypes.STRING(8),
+      unique: true,
+      allowNull: true
+    },
+    queuePosition: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     },
     printOptions: {
       type: DataTypes.JSONB,

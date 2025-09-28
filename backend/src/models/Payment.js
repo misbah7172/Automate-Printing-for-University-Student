@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.ENUM(
         'pending',
+        'verified',
         'processing',
         'completed',
         'failed',
@@ -36,12 +37,17 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'pending'
     },
     paymentMethod: {
-      type: DataTypes.ENUM('card', 'balance', 'cash', 'transfer'),
+      type: DataTypes.ENUM('card', 'balance', 'cash', 'bkash', 'transfer'),
       allowNull: false
     },
     transactionId: {
       type: DataTypes.STRING,
       unique: true
+    },
+    txId: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: true
     },
     stripePaymentIntentId: {
       type: DataTypes.STRING

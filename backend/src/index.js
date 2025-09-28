@@ -4,6 +4,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 require('dotenv').config();
 
 // Import routes
@@ -13,6 +15,8 @@ const documentRoutes = require('./routes/documents');
 const printJobRoutes = require('./routes/printJobs');
 const paymentRoutes = require('./routes/payments');
 const adminRoutes = require('./routes/admin');
+const queueRoutes = require('./routes/queue');
+const printRoutes = require('./routes/print');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -22,7 +26,30 @@ const { authenticate } = require('./middleware/auth');
 const { sequelize } = require('./models');
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.NODE_ENV === 'production' 
+      ? ['https://admin.autoprint.com', 'https://student.autoprint.com']
+      : ['http://localhost:3001', 'http://localhost:3002'],
+    credentials: true
+  }
+});
+
 const PORT = process.env.PORT || 3000;
+
+// Make io available to routes
+app.set('io', io);
+
+// Initialize workers
+const QueueWorker = require('./workers/queueWorker');
+const DocumentCleanupWorker = require('./workers/documentCleanupWorker');
+
+const queueWorker = new QueueWorker(io);
+const documentCleanupWorker = new DocumentCleanupWorker();
+
+app.set('queueWorker', queueWorker);
+app.set('documentCleanupWorker', documentCleanupWorker);
 
 // Security middleware
 app.use(helmet());
@@ -68,6 +95,8 @@ app.use('/api/documents', authenticate, documentRoutes);
 app.use('/api/print-jobs', authenticate, printJobRoutes);
 app.use('/api/payments', authenticate, paymentRoutes);
 app.use('/api/admin', authenticate, adminRoutes);
+app.use('/api/queue', queueRoutes);
+app.use('/api/print', printRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -94,16 +123,74 @@ const startServer = async () => {
       console.log('✅ Database models synchronized.');
     }
 
+    // Socket.IO authentication and connection handling
+    const jwt = require('jsonwebtoken');
+    
+    io.use((socket, next) => {
+      const token = socket.handshake.auth.token;
+      
+      if (!token) {
+        return next(new Error('Authentication token required'));
+      }
+
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        socket.userId = decoded.userId;
+        socket.role = decoded.role;
+        next();
+      } catch (error) {
+        console.error('Socket authentication error:', error);
+        next(new Error('Invalid authentication token'));
+      }
+    });
+
+    io.on('connection', (socket) => {
+      console.log(`User ${socket.userId} connected (${socket.role})`);
+      
+      // Join user-specific room for personalized updates
+      socket.join(`user_${socket.userId}`);
+      
+      // Join role-specific rooms
+      socket.join(`role_${socket.role}`);
+      
+      // Send current queue status on connection
+      socket.emit('connectionSuccess', {
+        userId: socket.userId,
+        role: socket.role,
+        connectedAt: new Date()
+      });
+
+      socket.on('disconnect', () => {
+        console.log(`User ${socket.userId} disconnected`);
+      });
+
+      // Handle user requesting current status
+      socket.on('requestQueueStatus', async () => {
+        try {
+          await queueWorker.emitQueueStatus();
+        } catch (error) {
+          socket.emit('error', { message: 'Failed to get queue status' });
+        }
+      });
+    });
+
     // Start server
-    const server = app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`🚀 AutoPrint Backend server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+      console.log(`🔌 Socket.IO enabled for real-time updates`);
     });
+
+    // Start workers
+    queueWorker.start();
+    documentCleanupWorker.start();
 
     // Graceful shutdown
     process.on('SIGTERM', () => {
       console.log('SIGTERM received, shutting down gracefully...');
+      queueWorker.stop();
+      documentCleanupWorker.stop();
       server.close(() => {
         sequelize.close();
         process.exit(0);

@@ -5,7 +5,7 @@ const { requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-// POST /api/print-jobs
+// POST /api/print-jobs - Create print job with 'awaiting_payment' status and return payment instructions
 router.post('/', asyncHandler(async (req, res) => {
   const { documentId, printOptions = {} } = req.body;
 
@@ -22,10 +22,11 @@ router.post('/', asyncHandler(async (req, res) => {
     return res.status(404).json({ error: 'Document not found or not ready for printing' });
   }
 
-  // Create print job
+  // Create print job with awaiting_payment status
   const printJob = await PrintJob.create({
     userId: req.user.userId,
     documentId: document.id,
+    status: 'awaiting_payment',
     printOptions: {
       copies: printOptions.copies || 1,
       color: printOptions.color || false,
@@ -42,11 +43,22 @@ router.post('/', asyncHandler(async (req, res) => {
   printJob.totalCost = printJob.calculateCost();
   await printJob.save();
 
+  // Generate payment instructions with bKash QR code
+  const { generatePaymentInstructions } = require('../services/qrService');
+  const paymentInstructions = await generatePaymentInstructions(printJob);
+
   res.status(201).json({
     message: 'Print job created successfully',
-    printJob: await PrintJob.findByPk(printJob.id, {
-      include: ['document', 'user']
-    })
+    printJob: {
+      id: printJob.id,
+      jobNumber: printJob.jobNumber,
+      status: printJob.status,
+      totalCost: printJob.totalCost,
+      totalPages: printJob.totalPages,
+      printOptions: printJob.printOptions,
+      createdAt: printJob.createdAt
+    },
+    paymentInstructions: paymentInstructions
   });
 }));
 

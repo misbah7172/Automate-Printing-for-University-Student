@@ -5,6 +5,9 @@ const { requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Import admin sub-routes
+const workersRoutes = require('./admin/workers');
+
 // All admin routes require admin role
 router.use(requireRole(['admin']));
 
@@ -158,5 +161,8 @@ router.get('/reports/usage', asyncHandler(async (req, res) => {
     parameters: { startDate, endDate }
   });
 }));
+
+// Mount worker management routes
+router.use('/workers', workersRoutes);
 
 module.exports = router;

@@ -42,7 +42,13 @@
     "joi": "^17.9.2",
     "express-rate-limit": "^6.10.0",
     "compression": "^1.7.4",
-    "express-validator": "^7.0.1"
+    "express-validator": "^7.0.1",
+    "socket.io": "^4.7.2",
+    "bull": "^4.11.3",
+    "node-cron": "^3.0.2",
+    "qrcode": "^1.5.3",
+    "uuid": "^9.0.0",
+    "multer-s3": "^3.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1",
