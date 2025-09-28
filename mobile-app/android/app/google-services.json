@@ -12,7 +12,20 @@
           "package_name": "com.uni.printapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "961221779391-kpl396pvraidr9s8j5rmne3qm7u4uaaj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uni.printapp",
+            "certificate_hash": "40e61dfd5930e06b2334cc026a2d800d5e89d36f"
+          }
+        },
+        {
+          "client_id": "961221779391-3r7nc18idk3qa67k808uv367p5r5bv9u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBYFGELbsYODp3BYvQlnAAvKEjnQM5U3s8"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961221779391-3r7nc18idk3qa67k808uv367p5r5bv9u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

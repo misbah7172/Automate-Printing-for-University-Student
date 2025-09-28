@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../../services/firebase_service.dart';
-import 'register_screen.dart';
+import '../../services/firebase_auth_service.dart';
+import '../student/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,43 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   bool _isLoading = false;
-  bool _obscurePassword = true;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _signInWithEmail() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await FirebaseService.signInWithEmail(
-        _emailController.text.trim(),
-        _passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      _showErrorSnackBar(_getErrorMessage(e));
-    } catch (e) {
-      _showErrorSnackBar('An unexpected error occurred');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
 
   Future<void> _signInWithGoogle() async {
     setState(() {
@@ -55,54 +18,26 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final userCredential = await FirebaseService.signInWithGoogle();
-      if (userCredential == null) {
-        _showErrorSnackBar('Google sign-in was cancelled');
+      final result = await FirebaseAuthService.signInWithGoogle();
+
+      if (result['success'] == true && mounted) {
+        // Navigate to dashboard
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const StudentDashboardScreen(),
+          ),
+        );
+      } else {
+        _showErrorSnackBar(result['error'] ?? 'Sign in failed');
       }
     } catch (e) {
-      _showErrorSnackBar('Google sign-in failed');
+      _showErrorSnackBar('An error occurred: ${e.toString()}');
     } finally {
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
-    }
-  }
-
-  Future<void> _signInWithFacebook() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final userCredential = await FirebaseService.signInWithFacebook();
-      if (userCredential == null) {
-        _showErrorSnackBar('Facebook sign-in was cancelled');
-      }
-    } catch (e) {
-      _showErrorSnackBar('Facebook sign-in failed');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> _resetPassword() async {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      _showErrorSnackBar('Please enter your email address');
-      return;
-    }
-
-    try {
-      await FirebaseService.resetPassword(email);
-      _showSuccessSnackBar('Password reset email sent!');
-    } on FirebaseAuthException catch (e) {
-      _showErrorSnackBar(_getErrorMessage(e));
     }
   }
 
@@ -111,214 +46,137 @@ class _LoginScreenState extends State<LoginScreen> {
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
       ),
     );
-  }
-
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-
-  String _getErrorMessage(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'user-not-found':
-        return 'No user found with this email';
-      case 'wrong-password':
-        return 'Incorrect password';
-      case 'invalid-email':
-        return 'Invalid email address';
-      case 'too-many-requests':
-        return 'Too many attempts. Try again later';
-      default:
-        return 'Authentication failed';
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 60),
-              
-              // App Logo/Icon
-              const Icon(
-                Icons.print,
-                size: 80,
-                color: Colors.blue,
+              // Logo/App Name
+              Icon(
+                Icons.school,
+                size: 100,
+                color: Theme.of(context).primaryColor,
               ),
-              
               const SizedBox(height: 24),
-              
-              // Title
-              const Text(
-                'AutoPrint Mobile',
-                style: TextStyle(
-                  fontSize: 28,
+              Text(
+                'AutomatePrinting',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 ),
-                textAlign: TextAlign.center,
               ),
-              
               const SizedBox(height: 8),
-              
-              const Text(
-                'Sign in to access your account',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
+              Text(
+                'For University Students',
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors.grey[600],
+                ),
               ),
-              
               const SizedBox(height: 48),
               
-              // Login Form
-              Form(
-                key: _formKey,
+              // University Email Notice
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
                 child: Column(
                   children: [
-                    TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.blue[700],
+                      size: 24,
                     ),
-                    
-                    const SizedBox(height: 16),
-                    
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                        ),
-                        border: const OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                    ),
-                    
                     const SizedBox(height: 8),
-                    
-                    // Forgot Password
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: _resetPassword,
-                        child: const Text('Forgot Password?'),
+                    Text(
+                      'University Students Only',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue[700],
+                        fontSize: 16,
                       ),
                     ),
-                    
-                    const SizedBox(height: 24),
-                    
-                    // Sign In Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : _signInWithEmail,
-                        child: _isLoading 
-                          ? const CircularProgressIndicator()
-                          : const Text('Sign In'),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Please sign in with your university Google account ending with "ac.bd"',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.blue[600],
+                        fontSize: 14,
                       ),
                     ),
                   ],
                 ),
               ),
-              
               const SizedBox(height: 32),
-              
-              // Divider
-              const Row(
-                children: [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('OR'),
+
+              // Google Sign In Button
+              SizedBox(
+                height: 56,
+                child: ElevatedButton.icon(
+                  onPressed: _isLoading ? null : _signInWithGoogle,
+                  icon: _isLoading 
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/google_logo.png',
+                        height: 24,
+                        width: 24,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.login,
+                            color: Colors.white,
+                          );
+                        },
+                      ),
+                  label: Text(
+                    _isLoading ? 'Signing in...' : 'Sign in with Google',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
-                  Expanded(child: Divider()),
-                ],
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
               ),
-              
               const SizedBox(height: 24),
               
-              // Social Sign In Buttons
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  onPressed: _isLoading ? null : _signInWithGoogle,
-                  icon: const Icon(Icons.g_mobiledata, color: Colors.red),
-                  label: const Text('Sign in with Google'),
+              // Additional Information
+              Text(
+                'By signing in, you agree to use this app for university printing services only.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
                 ),
-              ),
-              
-              const SizedBox(height: 16),
-              
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  onPressed: _isLoading ? null : _signInWithFacebook,
-                  icon: const Icon(Icons.facebook, color: Colors.blue),
-                  label: const Text('Sign in with Facebook'),
-                ),
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Sign Up Link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account? "),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('Sign Up'),
-                  ),
-                ],
               ),
             ],
           ),

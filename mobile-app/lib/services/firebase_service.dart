@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class FirebaseService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -121,33 +120,7 @@ class FirebaseService {
     }
   }
 
-  // Facebook Sign In
-  static Future<UserCredential?> signInWithFacebook() async {
-    try {
-      // Trigger the sign-in flow
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      
-      if (loginResult.status != LoginStatus.success) {
-        return null; // User cancelled or error
-      }
 
-      // Create a credential from the access token
-      final OAuthCredential facebookAuthCredential = 
-          FacebookAuthProvider.credential(loginResult.accessToken!.token);
-
-      // Sign in to Firebase with the Facebook credential
-      UserCredential userCredential = await _auth.signInWithCredential(facebookAuthCredential);
-      
-      // Check if user document exists, create if not
-      await _ensureUserDocument(userCredential.user!);
-      await _updateFCMToken(userCredential.user!);
-      
-      return userCredential;
-    } catch (e) {
-      print('Facebook sign in error: $e');
-      rethrow;
-    }
-  }
 
   // Password Reset
   static Future<void> resetPassword(String email) async {
@@ -163,7 +136,6 @@ class FirebaseService {
   static Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();
-      await FacebookAuth.instance.logOut();
       await _auth.signOut();
     } catch (e) {
       print('Sign out error: $e');
@@ -249,6 +221,27 @@ class FirebaseService {
   // Get FCM token
   static Future<String?> getFCMToken() async {
     return await _messaging.getToken();
+  }
+
+  // Register with email and password (wrapper for signUpWithEmail)
+  static Future<bool> registerWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String name,
+    required String studentId,
+  }) async {
+    try {
+      final userData = {
+        'name': name,
+        'studentId': studentId,
+      };
+      
+      final userCredential = await signUpWithEmail(email, password, userData);
+      return userCredential != null;
+    } catch (e) {
+      print('Registration error: $e');
+      rethrow;
+    }
   }
 }
 

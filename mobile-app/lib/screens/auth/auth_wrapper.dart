@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../services/firebase_service.dart';
-import '../home/home_screen.dart';
+import '../../services/firebase_auth_service.dart';
+import '../student/dashboard_screen.dart';
 import 'login_screen.dart';
 
 class AuthWrapper extends StatelessWidget {
@@ -10,7 +10,7 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: FirebaseService.authStateChanges,
+      stream: FirebaseAuthService.authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -20,9 +20,9 @@ class AuthWrapper extends StatelessWidget {
           );
         }
         
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data != null) {
           // User is signed in
-          return const HomeScreen();
+          return const StudentDashboardScreen();
         } else {
           // User is not signed in
           return const LoginScreen();

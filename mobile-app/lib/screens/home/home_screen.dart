@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../services/firebase_service.dart';
+import '../../services/firebase_auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseService.currentUser;
+    final user = FirebaseAuthService.currentUser;
     
     return Scaffold(
       appBar: AppBar(
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await FirebaseService.signOut();
+              await FirebaseAuthService.signOut();
             },
           ),
         ],
