@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961221779391",
+    "project_id": "automate-printing-d6943",
+    "storage_bucket": "automate-printing-d6943.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961221779391:android:0ec0247b0d6696d45f0b0a",
+        "android_client_info": {
+          "package_name": "com.uni.printapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYFGELbsYODp3BYvQlnAAvKEjnQM5U3s8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
