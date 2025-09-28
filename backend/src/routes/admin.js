@@ -2,6 +2,7 @@ const express = require('express');
 const { User, Document, PrintJob, Payment } = require('../models');
 const { asyncHandler } = require('../middleware/asyncHandler');
 const { requireRole } = require('../middleware/auth');
+const workersRoutes = require('./admin/workers');
 
 const router = express.Router();
 

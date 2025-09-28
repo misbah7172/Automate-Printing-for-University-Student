@@ -1,13 +1,44 @@
 # AutoPrint Admin Dashboard
 
-React-based administrative interface for managing the AutoPrint system. Provides comprehensive tools for user management, print job monitoring, payment processing, and system analytics.
+A modern React-based admin dashboard for managing the AutoPrint system with real-time updates, payment verification, queue management, and comprehensive reporting.
 
 ## Features
 
-- **User Management**: Create, edit, and manage user accounts and permissions
-- **Print Job Monitoring**: Real-time tracking of all print jobs across the system
-- **Payment Administration**: Process payments, handle refunds, and manage billing
-- **System Analytics**: Revenue reports, usage statistics, and performance metrics
+### 🔐 Authentication & Security
+- JWT-based authentication with admin role verification
+- Protected routes with automatic redirection
+- Secure token management with auto-refresh
+
+### 💰 Payment Management
+- **Pending Payments View**: List all pending bKash payments with transaction details
+- **Payment Verification**: Approve or reject payments with admin notes
+- **Document Preview**: View uploaded documents before payment approval
+- **Real-time Updates**: Instant notifications when payments are processed
+
+### 📋 Queue Management
+- **Live Queue Status**: Real-time view of current print queue
+- **Queue Controls**: Skip, cancel, or timeout jobs as needed
+- **Position Tracking**: Monitor job positions and estimated wait times
+- **Status Monitoring**: Track jobs through their lifecycle
+
+### 🖨️ Printer Status
+- **Multi-Printer Support**: Monitor multiple connected printers
+- **Supply Levels**: Track ink and paper levels with visual indicators
+- **Error Monitoring**: Real-time printer error detection and alerts
+- **Performance Metrics**: Job completion rates and statistics
+
+### 📊 Reports & Analytics
+- **Revenue Reports**: Daily, weekly, and monthly revenue tracking
+- **Usage Statistics**: Print job volumes and page counts
+- **User Analytics**: Top users and usage patterns
+- **Custom Date Ranges**: Flexible reporting periods
+- **Export Functionality**: CSV export for further analysis
+
+### 🔄 Real-time Features
+- **WebSocket Integration**: Live updates for all system changes
+- **Status Indicators**: Connection status and system health
+- **Push Notifications**: Toast notifications for important events
+- **Auto-refresh**: Automatic data updates without page reload
 - **Printer Management**: Monitor printer status and manage print queues
 - **Document Management**: Oversee document uploads and processing
 - **Role-Based Access**: Different views and capabilities based on admin privileges
