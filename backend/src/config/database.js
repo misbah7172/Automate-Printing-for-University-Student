@@ -2,7 +2,7 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_t0Qn9BdvAusk@ep-fancy-bird-adrr4bn3-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_8uexFD5ArTqV@ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech/neondb',
     dialect: 'postgres',
     logging: console.log,
     pool: {
@@ -19,7 +19,7 @@ module.exports = {
     }
   },
   test: {
-    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_t0Qn9BdvAusk@ep-fancy-bird-adrr4bn3-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_8uexFD5ArTqV@ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech/neondb',
     dialect: 'postgres',
     logging: false,
     pool: {
@@ -36,7 +36,7 @@ module.exports = {
     }
   },
   production: {
-    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_t0Qn9BdvAusk@ep-fancy-bird-adrr4bn3-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_8uexFD5ArTqV@ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech/neondb',
     dialect: 'postgres',
     logging: false,
     pool: {

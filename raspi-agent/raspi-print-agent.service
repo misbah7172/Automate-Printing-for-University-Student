@@ -1,0 +1,47 @@
+[Unit]
+Description=Raspberry Pi Print Agent
+Documentation=https://github.com/misbah7172/Automate-Printing-for-University-Student
+After=network.target cups.service
+Wants=network.target
+Requires=cups.service
+
+[Service]
+Type=simple
+User=pi
+Group=lp
+WorkingDirectory=/opt/raspi-print-agent
+ExecStart=/opt/raspi-print-agent/venv/bin/python /opt/raspi-print-agent/src/print_agent.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=raspi-print-agent
+
+# Environment variables (can also be set via EnvironmentFile)
+Environment=BACKEND_URL=https://your-backend.com
+Environment=RASPI_API_KEY=your-api-key-here
+Environment=PRINTER_NAME=HP_LaserJet_Pro_M404dn
+Environment=POLL_INTERVAL_SECONDS=5.0
+Environment=HTTP_PORT=8080
+Environment=LOG_LEVEL=INFO
+
+# Optional: Load environment from file
+# EnvironmentFile=/etc/raspi-print-agent/config.env
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/tmp /var/log
+PrivateTmp=false
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+# Resource limits
+LimitNOFILE=65536
+MemoryHigh=512M
+MemoryMax=1G
+
+[Install]
+WantedBy=multi-user.target
