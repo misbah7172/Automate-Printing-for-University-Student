@@ -12,7 +12,7 @@ class PaymentsScreen extends StatefulWidget {
 class _PaymentsScreenState extends State<PaymentsScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   List<PrintJob> _pendingPayments = [];
-  List<PrintJob> _verifiedPayments = [];
+  final List<PrintJob> _verifiedPayments = [];
   bool _isLoading = false;
   String? _error;
 

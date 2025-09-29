@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/api_config.dart';
 
 class DebugSettingsScreen extends StatefulWidget {
-  const DebugSettingsScreen({Key? key}) : super(key: key);
+  const DebugSettingsScreen({super.key});
 
   @override
   State<DebugSettingsScreen> createState() => _DebugSettingsScreenState();

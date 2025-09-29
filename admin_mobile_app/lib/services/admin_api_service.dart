@@ -6,25 +6,16 @@ import '../models/student.dart';
 import '../models/print_job.dart';
 import '../models/printer_status.dart';
 import '../models/dashboard_stats.dart';
+import '../config/api_config.dart';
 
 class AdminApiService {
-  // Configuration for different environments
-  static const String _emulatorUrl = 'http://10.0.2.2:3000';    // Android emulator
-  static const String _deviceUrl = 'http://192.168.0.103:3000'; // Real device (your computer's IP)
-  static const String _localUrl = 'http://localhost:3000';      // Web/Desktop
-  
-  // Change this to switch between emulator and real device
-  // Set to true when using Android emulator, false for real device
-  static const bool _isEmulator = false;
-  
-  static String get baseUrl => _isEmulator ? _emulatorUrl : _deviceUrl;
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
 
   // Authentication
   static Future<String?> login(String username, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/login'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/login'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'username': username,
@@ -68,7 +59,7 @@ class AdminApiService {
   static Future<DashboardStats> getDashboardStats() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/dashboard/stats'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/dashboard/stats'),
         headers: await _getHeaders(),
       );
 
@@ -86,7 +77,7 @@ class AdminApiService {
   static Future<List<PrintJob>> getCurrentQueue() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/queue/current'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/queue/current'),
         headers: await _getHeaders(),
       );
 
@@ -118,7 +109,7 @@ class AdminApiService {
         if (sortOrder != null) 'sortOrder': sortOrder,
       };
 
-      final uri = Uri.parse('$baseUrl/api/admin/students').replace(queryParameters: queryParams);
+      final uri = Uri.parse('${ApiConfig.baseUrl}/api/admin/students').replace(queryParameters: queryParams);
       final response = await http.get(uri, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
@@ -136,7 +127,7 @@ class AdminApiService {
   static Future<void> blockUser(String userId, bool block) async {
     try {
       final response = await http.patch(
-        Uri.parse('$baseUrl/api/admin/students/$userId/block'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/students/$userId/block'),
         headers: await _getHeaders(),
         body: json.encode({'blocked': block}),
       );
@@ -153,7 +144,7 @@ class AdminApiService {
   static Future<List<PrintJob>> getPendingPayments() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/payments/pending'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/payments/pending'),
         headers: await _getHeaders(),
       );
 
@@ -171,7 +162,7 @@ class AdminApiService {
   static Future<void> verifyPayment(String jobId, bool approve, {String? notes}) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/payments/$jobId/verify'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/payments/$jobId/verify'),
         headers: await _getHeaders(),
         body: json.encode({
           'approve': approve,
@@ -191,7 +182,7 @@ class AdminApiService {
   static Future<List<PrintJob>> getFullQueue() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/queue/full'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/queue/full'),
         headers: await _getHeaders(),
       );
 
@@ -209,7 +200,7 @@ class AdminApiService {
   static Future<void> skipJob(String jobId) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/queue/$jobId/skip'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/queue/$jobId/skip'),
         headers: await _getHeaders(),
       );
 
@@ -224,7 +215,7 @@ class AdminApiService {
   static Future<void> cancelJob(String jobId) async {
     try {
       final response = await http.delete(
-        Uri.parse('$baseUrl/api/admin/queue/$jobId'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/queue/$jobId'),
         headers: await _getHeaders(),
       );
 
@@ -239,7 +230,7 @@ class AdminApiService {
   static Future<void> requeueJob(String jobId) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/queue/$jobId/requeue'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/queue/$jobId/requeue'),
         headers: await _getHeaders(),
       );
 
@@ -254,7 +245,7 @@ class AdminApiService {
   static Future<void> forcePrint(String jobId) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/printer/force-print/$jobId'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/printer/force-print/$jobId'),
         headers: await _getHeaders(),
       );
 
@@ -270,7 +261,7 @@ class AdminApiService {
   static Future<PrinterStatus> getPrinterStatus() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/printer/status'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/printer/status'),
         headers: await _getHeaders(),
       );
 
@@ -288,7 +279,7 @@ class AdminApiService {
   static Future<void> pausePrinting() async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/printer/pause'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/printer/pause'),
         headers: await _getHeaders(),
       );
 
@@ -303,7 +294,7 @@ class AdminApiService {
   static Future<void> resumePrinting() async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/printer/resume'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/printer/resume'),
         headers: await _getHeaders(),
       );
 
@@ -318,7 +309,7 @@ class AdminApiService {
   static Future<void> cancelCurrentPrint() async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/admin/printer/cancel-current'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/printer/cancel-current'),
         headers: await _getHeaders(),
       );
 
@@ -334,7 +325,7 @@ class AdminApiService {
   static Future<Map<String, dynamic>> getDailyReport() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/reports/daily'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/reports/daily'),
         headers: await _getHeaders(),
       );
 
@@ -351,7 +342,7 @@ class AdminApiService {
   static Future<Map<String, dynamic>> getWeeklyReport() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/reports/weekly'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/reports/weekly'),
         headers: await _getHeaders(),
       );
 
@@ -368,7 +359,7 @@ class AdminApiService {
   static Future<Map<String, dynamic>> getMonthlyReport() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/admin/reports/monthly'),
+        Uri.parse('${ApiConfig.baseUrl}/api/admin/reports/monthly'),
         headers: await _getHeaders(),
       );
 
@@ -397,7 +388,7 @@ class AdminApiService {
         if (endDate != null) 'endDate': endDate,
       };
 
-      final uri = Uri.parse('$baseUrl/api/admin/logs/jobs').replace(queryParameters: queryParams);
+      final uri = Uri.parse('${ApiConfig.baseUrl}/api/admin/logs/jobs').replace(queryParameters: queryParams);
       final response = await http.get(uri, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
@@ -421,7 +412,7 @@ class AdminApiService {
         'limit': limit.toString(),
       };
 
-      final uri = Uri.parse('$baseUrl/api/admin/logs/errors').replace(queryParameters: queryParams);
+      final uri = Uri.parse('${ApiConfig.baseUrl}/api/admin/logs/errors').replace(queryParameters: queryParams);
       final response = await http.get(uri, headers: await _getHeaders());
 
       if (response.statusCode == 200) {

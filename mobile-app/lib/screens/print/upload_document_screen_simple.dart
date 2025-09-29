@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../services/student_service.dart';
 
 class UploadDocumentScreen extends ConsumerStatefulWidget {
   const UploadDocumentScreen({super.key});

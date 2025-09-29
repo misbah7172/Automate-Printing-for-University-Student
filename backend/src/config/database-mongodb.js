@@ -14,9 +14,11 @@ class Database {
       
       const options = {
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 30000, // Increased for cloud connection
         socketTimeoutMS: 45000,
-        bufferCommands: false
+        bufferCommands: false,
+        retryWrites: true,
+        w: 'majority'
       };
 
       this.connection = await mongoose.connect(url, options);

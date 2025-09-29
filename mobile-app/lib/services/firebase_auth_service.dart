@@ -3,9 +3,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 
 class FirebaseAuthService {
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -108,7 +108,7 @@ class FirebaseAuthService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/google-signin'),
+        Uri.parse('${ApiConfig.apiUrl}/auth/google-signin'),
         headers: {
           'Content-Type': 'application/json',
           if (idToken != null) 'Authorization': 'Bearer $idToken',
@@ -158,7 +158,7 @@ class FirebaseAuthService {
       if (token == null) return null;
 
       final response = await http.get(
-        Uri.parse('$baseUrl/auth/profile'),
+        Uri.parse('${ApiConfig.apiUrl}/auth/profile'),
         headers: {
           'Authorization': 'Bearer $token',
         },

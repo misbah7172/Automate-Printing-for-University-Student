@@ -11,6 +11,10 @@ const printJobSchema = new mongoose.Schema({
     ref: 'Document',
     required: true
   },
+  fileName: {
+    type: String,
+    required: true
+  },
   paymentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Payment'
@@ -22,8 +26,25 @@ const printJobSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['awaiting_payment', 'queued', 'waiting_for_confirm', 'printing', 'completed', 'failed', 'cancelled'],
-    default: 'awaiting_payment'
+    enum: [
+      'uploaded',           // File successfully uploaded
+      'pending_payment',    // Waiting for bKash TxID
+      'payment_verification', // Admin needs to verify TxID
+      'queued',            // Payment verified, job assigned serial number
+      'waiting_confirmation', // It's the student's turn, waiting for UPID confirm
+      'skipped',           // Student didn't confirm in 5 seconds → moved back in queue
+      'printing',          // Raspberry Pi has started the print job
+      'printed',           // Successfully printed
+      'error',             // Printer failed (paper jam, ink low, etc.)
+      'expired',           // Job not completed within X hours → auto-deleted
+      'cancelled'          // Job cancelled by user
+    ],
+    default: 'uploaded'
+  },
+  serialNumber: {
+    type: Number,
+    unique: true,
+    sparse: true  // Only set when job moves to 'queued' status
   },
   upid: {
     type: String,

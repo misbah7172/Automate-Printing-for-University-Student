@@ -6,9 +6,6 @@ const workersRoutes = require('./admin/workers');
 
 const router = express.Router();
 
-// Import admin sub-routes
-const workersRoutes = require('./admin/workers');
-
 // All admin routes require admin role
 router.use(requireRole(['admin']));
 

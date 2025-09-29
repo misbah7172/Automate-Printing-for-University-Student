@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../config/api_config.dart';
 
 class StudentService {
-  static const String baseUrl = 'http://localhost:3000/api';
 
   static Future<Map<String, dynamic>?> getStudentData(String uid) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/student/$uid'),
+        Uri.parse('${ApiConfig.apiUrl}/student/$uid'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -25,7 +25,7 @@ class StudentService {
   static Future<double> getBalance(String uid) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/student/$uid/balance'),
+        Uri.parse('${ApiConfig.apiUrl}/student/$uid/balance'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -43,7 +43,7 @@ class StudentService {
   static Future<List<Map<String, dynamic>>> getPrintHistory(String uid) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/student/$uid/history'),
+        Uri.parse('${ApiConfig.apiUrl}/student/$uid/history'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -61,7 +61,7 @@ class StudentService {
   static Future<List<Map<String, dynamic>>> getPrintQueue(String uid) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/student/$uid/queue'),
+        Uri.parse('${ApiConfig.apiUrl}/student/$uid/queue'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -79,7 +79,7 @@ class StudentService {
   static Future<bool> addBalance(String uid, double amount) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/student/$uid/add-balance'),
+        Uri.parse('${ApiConfig.apiUrl}/student/$uid/add-balance'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'amount': amount}),
       );
@@ -99,7 +99,7 @@ class StudentService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/student/print-job'),
+        Uri.parse('${ApiConfig.apiUrl}/student/print-job'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'studentId': uid,

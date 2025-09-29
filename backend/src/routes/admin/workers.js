@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate, requireRole } = require('../middleware/auth');
-const { asyncHandler } = require('../utils/asyncHandler');
+const { authenticate, requireRole } = require('../../middleware/auth');
+const { asyncHandler } = require('../../middleware/asyncHandler');
 
 // GET /api/admin/workers/status - Get status of all workers
 router.get('/status', authenticate, requireRole(['admin']), asyncHandler(async (req, res) => {

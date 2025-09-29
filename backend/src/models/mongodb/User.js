@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
+  firebaseUid: {
+    type: String,
+    unique: true,
+    sparse: true, // Allows null values to be non-unique
+    index: true
+  },
   email: {
     type: String,
     required: true,
@@ -16,8 +22,16 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function() {
+      // Password is only required if no Firebase UID (i.e., not using Firebase auth)
+      return !this.firebaseUid;
+    },
     minlength: 6
+  },
+  authProvider: {
+    type: String,
+    enum: ['email', 'google', 'facebook'],
+    default: 'email'
   },
   firstName: {
     type: String,

@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: autoprint-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URL
+        fromDatabase:
+          name: autoprint-mongodb
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/health
+
+databases:
+  - name: autoprint-mongodb
+    databaseName: autoprint
+    user: autoprint-user

@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'firebase_auth_service.dart';
+import '../config/api_config.dart';
 
 class ApiService {
-  // Update this URL to match your backend server
-  static const String baseUrl = 'http://localhost:3000/api';
-  
   // Authentication endpoints
   static Future<Map<String, dynamic>> signUp({
     required String email,
@@ -16,7 +13,7 @@ class ApiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/register'),
+        Uri.parse('${ApiConfig.apiUrl}/auth/register'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -57,7 +54,7 @@ class ApiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/login'),
+        Uri.parse('${ApiConfig.apiUrl}/auth/login'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -92,7 +89,7 @@ class ApiService {
   static Future<Map<String, dynamic>> getUserProfile(String token) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/user/profile'),
+        Uri.parse('${ApiConfig.apiUrl}/user/profile'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -129,7 +126,7 @@ class ApiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/payment/submit'),
+        Uri.parse('${ApiConfig.apiUrl}/payment/submit'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -172,7 +169,7 @@ class ApiService {
     try {
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/print/create'),
+        Uri.parse('${ApiConfig.apiUrl}/print/create'),
       );
       
       request.headers['Authorization'] = 'Bearer $token';
@@ -213,7 +210,7 @@ class ApiService {
   static Future<Map<String, dynamic>> getPrintQueue(String token) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/print/queue'),
+        Uri.parse('${ApiConfig.apiUrl}/print/queue'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -245,7 +242,7 @@ class ApiService {
   static Future<Map<String, dynamic>> getPrintHistory(String token) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/print/history'),
+        Uri.parse('${ApiConfig.apiUrl}/print/history'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -277,7 +274,7 @@ class ApiService {
   static Future<Map<String, dynamic>> getCurrentPrintJob(String token) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/print/current'),
+        Uri.parse('${ApiConfig.apiUrl}/print/current'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -310,7 +307,7 @@ class ApiService {
   static Future<Map<String, dynamic>> getPrintJobs(String token, {int page = 1, int limit = 10}) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/print/jobs?page=$page&limit=$limit'),
+        Uri.parse('${ApiConfig.apiUrl}/print/jobs?page=$page&limit=$limit'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -345,7 +342,7 @@ class ApiService {
   static Future<Map<String, dynamic>> confirmPrint(String token, String jobId) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/print/confirm/$jobId'),
+        Uri.parse('${ApiConfig.apiUrl}/print/confirm/$jobId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
