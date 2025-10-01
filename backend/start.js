@@ -21,25 +21,14 @@ async function startServer() {
 
     // Run migrations in production
     if (process.env.NODE_ENV === 'production') {
-      console.log('🔄 Running database migrations...');
+      console.log('🔄 Checking database migrations...');
       try {
-        const { exec } = require('child_process');
-        await new Promise((resolve, reject) => {
-          exec('npx sequelize-cli db:migrate', (error, stdout, stderr) => {
-            if (error) {
-              console.log('ℹ️  Migration output:', stdout);
-              console.log('⚠️  Migration warnings:', stderr);
-              // Don't fail if migrations already applied
-              resolve();
-            } else {
-              console.log('✅ Migrations completed:', stdout);
-              resolve();
-            }
-          });
-        });
+        // Try to sync the database (this will create tables if they don't exist)
+        await sequelize.sync({ alter: false });
+        console.log('✅ Database schema synchronized.');
       } catch (error) {
-        console.log('ℹ️  Migration note:', error.message);
-        // Continue anyway as migrations might already be applied
+        console.log('ℹ️  Database sync note:', error.message);
+        // Continue anyway as database might already be set up
       }
     }
 
