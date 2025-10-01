@@ -1,0 +1,5 @@
+# Force Render to ignore any Docker configurations
+Dockerfile*
+docker-compose*
+.dockerignore
+infra/
