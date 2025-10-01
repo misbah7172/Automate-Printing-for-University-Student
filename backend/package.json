@@ -4,7 +4,8 @@
   "description": "AutoPrint Backend API Server",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node start.js",
+    "start:dev": "node src/index.js",
     "start:mongodb": "node src/index-mongodb.js",
     "dev": "nodemon src/index.js",
     "dev:mongodb": "nodemon src/index-mongodb.js",
@@ -19,7 +20,8 @@
     "db:fresh": "npm run db:setup",
     "mongodb:test": "node test-mongodb.js",
     "mongodb:setup": "node setup-mongodb.js",
-    "mongodb:reset": "npm run mongodb:setup"
+    "mongodb:reset": "npm run mongodb:setup",
+    "postinstall": "npm run db:migrate || true"
   },
   "keywords": [
     "autoprint",
@@ -57,6 +59,7 @@
     "sequelize": "^6.32.1",
     "socket.io": "^4.7.2",
     "stripe": "^13.5.0",
+    "umzug": "^3.2.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

@@ -29,10 +29,28 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === 'production' 
-      ? ['https://admin.autoprint.com', 'https://student.autoprint.com']
-      : ['http://localhost:3001', 'http://localhost:3002'],
-    credentials: true
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps)
+      if (!origin) return callback(null, true);
+      
+      // Allow all origins if CORS_ORIGIN is '*' or in development
+      const corsOrigins = process.env.CORS_ORIGIN 
+        ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+        : ['*'];
+        
+      if (corsOrigins.includes('*') || process.env.NODE_ENV === 'development') {
+        return callback(null, true);
+      }
+      
+      // Check if origin is in allowed list
+      if (corsOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      
+      return callback(null, false);
+    },
+    credentials: true,
+    methods: ['GET', 'POST']
   }
 });
 
@@ -53,11 +71,32 @@ app.set('documentCleanupWorker', documentCleanupWorker);
 
 // Security middleware
 app.use(helmet());
+
+// CORS configuration - flexible for deployment
+const corsOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : ['*'];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://admin.autoprint.com', 'https://student.autoprint.com']
-    : ['http://localhost:3001', 'http://localhost:3002'],
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow all origins in development or if CORS_ORIGIN is '*'
+    if (corsOrigins.includes('*') || process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
+    
+    // Check if origin is in allowed list
+    if (corsOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // Rate limiting
