@@ -3,7 +3,7 @@ services:
     name: autoprint-backend
     env: node
     buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    startCommand: cd backend && node src/index.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -12,22 +12,6 @@ services:
       - key: DATABASE_URL
         value: postgresql://neondb_owner:npg_8uexFD5ArTqV@ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
       - key: JWT_SECRET
-        value: 3314c71f93fb3fe9f247e22a135e7e9caeabcec589411bab348d7dc369e598d08d7db4ad19a4c187c9f4b13fc4a343b6e16dfe35976ccdfdf57936559b05a49e
-      - key: JWT_EXPIRES_IN
-        value: 7d
-      - key: JWT_REFRESH_SECRET
-        value: 55c4f5c946d7b5cc247498418c2af6122c466d2d8c17eda45007c995c7addfb7a4e58cfc42140a3ab32c862fd13797350e96cfbbf1e5461c98846150a98544cd
-      - key: JWT_REFRESH_EXPIRES_IN
-        value: 30d
+        generateValue: true
       - key: CORS_ORIGIN
         value: "*"
-      - key: CORS_CREDENTIALS
-        value: "true"
-      - key: RATE_LIMIT_WINDOW_MS
-        value: "900000"
-      - key: RATE_LIMIT_MAX_REQUESTS
-        value: "100"
-      - key: MAX_FILE_SIZE
-        value: "52428800"
-      - key: UPLOAD_PATH
-        value: "/tmp/uploads"

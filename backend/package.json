@@ -21,8 +21,7 @@
     "db:fresh": "npm run db:setup",
     "mongodb:test": "node test-mongodb.js",
     "mongodb:setup": "node setup-mongodb.js",
-    "mongodb:reset": "npm run mongodb:setup",
-    "postinstall": "npm run db:migrate || true"
+    "mongodb:reset": "npm run mongodb:setup"
   },
   "keywords": [
     "autoprint",
