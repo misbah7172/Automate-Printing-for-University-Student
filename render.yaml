@@ -1,14 +1,18 @@
 services:
   - type: web
     name: autoprint-backend
-    runtime: node
+    runtime: docker
     rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
     plan: starter
     region: oregon
-    env: node
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
     numInstances: 1
+    buildFilter:
+      paths:
+      - backend/**
+      ignoredPaths:
+      - backend/node_modules/**
     envVars:
       - key: NODE_ENV
         value: production

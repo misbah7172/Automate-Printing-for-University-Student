@@ -10,8 +10,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci --only=production
 
-# Copy application code
-COPY src/ ./src/
+# Copy application code (copy all files, not just src/)
+COPY . .
+
+# Create uploads directory with proper permissions
+RUN mkdir -p uploads && chmod 755 uploads
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
@@ -21,12 +24,8 @@ RUN adduser -S nodejs -u 1001
 RUN chown -R nodejs:nodejs /app
 USER nodejs
 
-# Expose port
-EXPOSE 3000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node healthcheck.js
+# Expose port (use PORT from environment or default to 10000)
+EXPOSE 10000
 
 # Start the application
 CMD ["npm", "start"]
