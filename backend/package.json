@@ -4,7 +4,8 @@
   "description": "AutoPrint Backend API Server",
   "main": "src/index.js",
   "scripts": {
-    "start": "node start.js",
+    "start": "node start-simple.js",
+    "start:prod": "node start.js",
     "start:dev": "node src/index.js",
     "start:mongodb": "node src/index-mongodb.js",
     "dev": "nodemon src/index.js",

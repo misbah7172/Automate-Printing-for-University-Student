@@ -1,13 +1,9 @@
 services:
   - type: web
     name: autoprint-backend
-    runtime: node
     env: node
     buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
-    plan: starter
-    region: oregon
-    numInstances: 1
     envVars:
       - key: NODE_ENV
         value: production
