@@ -2,7 +2,11 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_8uexFD5ArTqV@ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech/neondb',
+    host: 'ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech',
+    port: 5432,
+    database: 'neondb',
+    username: 'neondb_owner',
+    password: 'npg_8uexFD5ArTqV',
     dialect: 'postgres',
     logging: console.log,
     pool: {
@@ -19,7 +23,11 @@ module.exports = {
     }
   },
   test: {
-    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_8uexFD5ArTqV@ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech/neondb',
+    host: 'ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech',
+    port: 5432,
+    database: 'neondb',
+    username: 'neondb_owner',
+    password: 'npg_8uexFD5ArTqV',
     dialect: 'postgres',
     logging: false,
     pool: {
@@ -36,7 +44,11 @@ module.exports = {
     }
   },
   production: {
-    url: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_8uexFD5ArTqV@ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech/neondb',
+    host: 'ep-divine-credit-ad52ykm7.c-2.us-east-1.aws.neon.tech',
+    port: 5432,
+    database: 'neondb',
+    username: 'neondb_owner',
+    password: 'npg_8uexFD5ArTqV',
     dialect: 'postgres',
     logging: false,
     pool: {

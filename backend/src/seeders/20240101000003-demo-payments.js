@@ -29,10 +29,10 @@ module.exports = {
         bkashNumber: '+8801711223344',
         processedAt: new Date(),
         notes: 'Payment for Research_Paper.docx printing',
-        gatewayData: {
+        gatewayData: JSON.stringify({
           bkash_transaction_id: 'BKS123456789',
           sender_number: '+8801711223344'
-        },
+        }),
         createdAt: new Date(),
         updatedAt: new Date()
       },

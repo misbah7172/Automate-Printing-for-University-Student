@@ -28,10 +28,10 @@ module.exports = {
         startedAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
         completedAt: new Date(Date.now() - 1.5 * 60 * 60 * 1000), // 1.5 hours ago
         specialInstructions: 'Please staple the pages together',
-        metadata: {
+        metadata: JSON.stringify({
           printDuration: 1800, // 30 minutes in seconds
           paperUsed: 5
-        },
+        }),
         createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
         updatedAt: new Date(Date.now() - 1.5 * 60 * 60 * 1000)
       },
@@ -60,10 +60,10 @@ module.exports = {
         startedAt: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
         estimatedCompletionTime: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes from now
         specialInstructions: 'Print double-sided, bind with spiral binding',
-        metadata: {
+        metadata: JSON.stringify({
           estimatedDuration: 2400, // 40 minutes in seconds
           currentPage: 8
-        },
+        }),
         createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
         updatedAt: new Date(Date.now() - 5 * 60 * 1000) // 5 minutes ago
       },
@@ -90,9 +90,9 @@ module.exports = {
         queuePosition: null,
         priority: 'normal',
         specialInstructions: 'Use recycled paper if available',
-        metadata: {
+        metadata: JSON.stringify({
           awaitingPaymentSince: new Date()
-        },
+        }),
         createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
         updatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000)
       },
@@ -120,11 +120,11 @@ module.exports = {
         priority: 'normal',
         errorMessage: 'Payment failed: Insufficient balance. Required: $3.00, Available: $0.00',
         specialInstructions: 'Color printing required for charts and graphs',
-        metadata: {
+        metadata: JSON.stringify({
           failureReason: 'insufficient_balance',
           requiredAmount: 3.00,
           availableBalance: 0.00
-        },
+        }),
         createdAt: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
         updatedAt: new Date(Date.now() - 30 * 60 * 1000)
       },
@@ -152,10 +152,10 @@ module.exports = {
         priority: 'low',
         estimatedCompletionTime: new Date(Date.now() + 45 * 60 * 1000), // 45 minutes from now
         specialInstructions: 'Print only pages 5-10 of the research paper',
-        metadata: {
+        metadata: JSON.stringify({
           queuedSince: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
           estimatedWaitTime: 2700 // 45 minutes in seconds
-        },
+        }),
         createdAt: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
         updatedAt: new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
       }

@@ -96,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: {}
     }
   }, {
-    tableName: 'print_jobs',
+    tableName: 'printjobs',
     timestamps: true,
     hooks: {
       beforeCreate: async (printJob) => {

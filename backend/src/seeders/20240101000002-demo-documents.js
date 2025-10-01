@@ -15,10 +15,10 @@ module.exports = {
         pageCount: 5,
         documentType: 'pdf',
         isProcessed: true,
-        metadata: {
+        metadata: JSON.stringify({
           originalUploadName: 'Assignment_1.pdf',
           processingTime: 2.3
-        },
+        }),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -34,11 +34,11 @@ module.exports = {
         pageCount: 12,
         documentType: 'pdf',
         isProcessed: true,
-        metadata: {
+        metadata: JSON.stringify({
           originalUploadName: 'Research_Paper.docx',
           convertedFromDocx: true,
           processingTime: 4.7
-        },
+        }),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -54,10 +54,10 @@ module.exports = {
         pageCount: 8,
         documentType: 'pdf',
         isProcessed: true,
-        metadata: {
+        metadata: JSON.stringify({
           originalUploadName: 'Lab_Report.pdf',
           processingTime: 3.1
-        },
+        }),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -73,10 +73,10 @@ module.exports = {
         pageCount: 20,
         documentType: 'pdf',
         isProcessed: true,
-        metadata: {
+        metadata: JSON.stringify({
           originalUploadName: 'Presentation_Slides.pdf',
           processingTime: 5.2
-        },
+        }),
         createdAt: new Date(),
         updatedAt: new Date()
       }
