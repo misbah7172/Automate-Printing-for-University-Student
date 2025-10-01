@@ -54,16 +54,58 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    printOptions: {
-      type: DataTypes.JSONB,
-      defaultValue: {
-        copies: 1,
-        color: false,
-        doubleSided: false,
-        paperSize: 'A4',
-        orientation: 'portrait',
-        quality: 'normal'
-      }
+    // Print settings are stored as separate columns
+    copies: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1
+    },
+    colorMode: {
+      type: DataTypes.ENUM('color', 'black_and_white'),
+      defaultValue: 'black_and_white'
+    },
+    doubleSided: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    paperSize: {
+      type: DataTypes.ENUM('A4', 'A3', 'Letter', 'Legal'),
+      defaultValue: 'A4'
+    },
+    orientation: {
+      type: DataTypes.ENUM('portrait', 'landscape'),
+      defaultValue: 'portrait'
+    },
+    printQuality: {
+      type: DataTypes.ENUM('draft', 'normal', 'high'),
+      defaultValue: 'normal'
+    },
+    pageRange: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    specialInstructions: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    printerId: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    priority: {
+      type: DataTypes.ENUM('low', 'normal', 'high'),
+      defaultValue: 'normal'
+    },
+    costPerPage: {
+      type: DataTypes.DECIMAL(10, 4),
+      allowNull: true
+    },
+    estimatedCompletionTime: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    errorMessage: {
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     totalPages: {
       type: DataTypes.INTEGER,
@@ -87,9 +129,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     completedAt: {
       type: DataTypes.DATE
-    },
-    failureReason: {
-      type: DataTypes.TEXT
     },
     metadata: {
       type: DataTypes.JSONB,
